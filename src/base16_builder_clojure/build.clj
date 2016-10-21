@@ -2,7 +2,7 @@
   (:require [base16-builder-clojure.util :refer [load-yaml-file]]
             [clojure.java.io :as io]
             [me.raynes.fs :as fs]
-            [clostache.parser :refer [render-resource]]
+            [clostache.parser :refer [render]]
             [slugger.core :refer [->slug]]))
 
 (defn scheme-names []
@@ -28,7 +28,7 @@
   (let [files (fs/glob (str path "/base16-*" extension))]
     (doseq [file files] (io/delete-file file))))
 
-(defn output-path [config]
+(defn output-path [name config]
   (str "templates/" name "/" (:output config)))
 
 (defn print-header [s]
@@ -77,19 +77,28 @@
 
 (defn build-scheme
   "Build a single template/scheme pair"
-  [name template-filename config scheme]
+  [template-name template-filename config scheme]
   (doseq [scheme-desc (scheme-files scheme)]
     (let [data (template-data scheme-desc)
           slug (:scheme-slug data)
           extension (:extension config)
-          output-filename (str "base16-" slug extension)]
-      (println "Building" output-filename))))
+          out-filename (str "base16-" slug extension)
+          out-path (output-path template-name config)
+          out-target (str out-path "/" out-filename)
+          template-path (str "templates/" template-name "/templates/" (name template-filename) ".mustache")
+          template (slurp template-path)
+          rendered (render template data)
+          ]
+      (println "Building" out-filename)
+      (when (not (fs/exists? out-path))
+        (fs/mkdir out-path))
+      (spit out-target rendered))))
 
 (defn build-template-config
   "Build one config of a template for all given schemes"
   [template-name filename config schemes]
   (print-header (str "Building " template-name " – " (name filename)))
-  (remove-existing-output (output-path config) (:extension config))
+  (remove-existing-output (output-path template-name config) (:extension config))
   (doseq [scheme schemes]
     (build-scheme template-name filename config scheme)))
 
