@@ -1,12 +1,7 @@
 (ns base16-builder-clojure.update
-  (:require [clj-yaml.core :as yaml]
+  (:require [base16-builder-clojure.util :refer [load-yaml-file]]
             [clojure.java.io :as file]
             [me.raynes.conch :refer [with-programs]]))
-
-(defn load-yaml-file [filename]
-  (-> filename
-      slurp
-      yaml/parse-string))
 
 (defn file-exists [filename]
   (.exists (file/as-file filename)))
