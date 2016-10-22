@@ -20,7 +20,7 @@
           rendered (render template data)
           ]
       (println "Building" out-filename)
-      (when (not (fs/exists? out-path))
+      (when-not (fs/exists? out-path)
         (fs/mkdir out-path))
       (spit out-target rendered))))
 

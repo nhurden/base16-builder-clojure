@@ -1,10 +1,8 @@
 (ns base16-builder-clojure.update
-  (:require [base16-builder-clojure.util :refer [load-yaml-file]]
-            [clojure.java.io :as file]
-            [me.raynes.conch :refer [with-programs]]))
-
-(defn file-exists [filename]
-  (.exists (file/as-file filename)))
+  (:require [base16-builder-clojure.io :refer [load-yaml-file]]
+            [me.raynes
+             [conch :refer [with-programs]]
+             [fs :as fs]]))
 
 (defn git-pull [dir]
   (with-programs [git]
@@ -21,7 +19,7 @@
   (doseq [[repo-name url] m]
     (let [dir (str base-path "/" (name repo-name))]
       (println "Fetching" dir)
-      (if (file-exists dir)
+      (if (fs/exists? dir)
         (git-pull dir)
         (git-clone url dir)))))
 
