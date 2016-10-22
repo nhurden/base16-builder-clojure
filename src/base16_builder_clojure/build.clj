@@ -1,89 +1,15 @@
 (ns base16-builder-clojure.build
-  (:require [base16-builder-clojure.util :refer [load-yaml-file]]
-            [clojure.java.io :as io]
-            [me.raynes.fs :as fs]
+  (:require [base16-builder-clojure
+             [io :refer :all]
+             [scheme :refer [scheme-data]]]
             [clostache.parser :refer [render]]
-            [slugger.core :refer [->slug]]
-            [clojure.string :as str]))
-
-(defn ->path [& components]
-  (str/join "/" components))
-
-(defn scheme-names []
-  (->> (load-yaml-file "sources/schemes/list.yaml")
-       keys
-       (map name)))
-
-(defn template-names []
-  (->> (load-yaml-file "sources/templates/list.yaml")
-       keys
-       (map name)))
-
-(defn template-configs [name]
-  (-> (->path "templates" name "templates" "config.yaml")
-      load-yaml-file))
-
-(defn scheme-files [name]
-  (->> (->path "schemes" name "*.yaml")
-       fs/glob
-       (map load-yaml-file)))
-
-(defn remove-existing-output [path extension]
-  (let [files (fs/glob (str path "/base16-*" extension))]
-    (doseq [file files] (io/delete-file file))))
-
-(defn output-path [name config]
-  (->path "templates" name (:output config)))
-
-(defn print-header [s]
-  (println)
-  (println "---")
-  (println s)
-  (println "---")
-  (println))
-
-(def color-keys
-  [:base00 :base01 :base02 :base03 :base04 :base05 :base06 :base07
-   :base08 :base09 :base0A :base0B :base0C :base0D :base0E :base0F])
-
-(defn hex-components [color]
-  [(subs color 0 2)
-   (subs color 2 4)
-   (subs color 4 6)])
-
-(defn rgb-components [color]
-  (defn hex->dec [hex]
-    (str (read-string (str "0x" hex))))
-
-  (map hex->dec (hex-components color)))
-
-(defn color-map [scheme-desc key]
-  (let [color (key scheme-desc)
-        [hex-r hex-g hex-b] (hex-components color)
-        [rgb-r rgb-g rgb-b] (rgb-components color)]
-    (defn k [suffix] (keyword (str (name key) suffix)))
-    {(k "-hex") color
-     (k "-hex-r") hex-r
-     (k "-hex-g") hex-g
-     (k "-hex-b") hex-b
-     (k "-rgb-r") rgb-r
-     (k "-rgb-g") rgb-g
-     (k "-rgb-b") rgb-b}))
-
-(defn assoc-bases [m scheme-desc]
-  (merge m (apply merge (map #(color-map scheme-desc %) color-keys))))
-
-(defn template-data [scheme-desc]
-  (-> {:scheme-slug (->slug (:scheme scheme-desc))
-       :scheme-name (:scheme scheme-desc)
-       :scheme-author (:author scheme-desc)}
-      (assoc-bases scheme-desc)))
+            [me.raynes.fs :as fs]))
 
 (defn build-scheme
   "Build a single template/scheme pair"
   [template-name template-filename config scheme]
   (doseq [scheme-desc (scheme-files scheme)]
-    (let [data (template-data scheme-desc)
+    (let [data (scheme-data scheme-desc)
           slug (:scheme-slug data)
           extension (:extension config)
           out-filename (str "base16-" slug extension)

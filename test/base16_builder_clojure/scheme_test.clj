@@ -1,5 +1,5 @@
-(ns base16-builder-clojure.build-test
-  (:require [base16-builder-clojure.build :as sut]
+(ns base16-builder-clojure.scheme-test
+  (:require [base16-builder-clojure.scheme :as sut]
             [clojure.test :as t :refer :all]))
 
 (def scheme-desc
