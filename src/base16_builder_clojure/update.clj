@@ -1,5 +1,5 @@
 (ns base16-builder-clojure.update
-  (:require [base16-builder-clojure.io :refer [load-yaml-file]]
+  (:require [base16-builder-clojure.io :refer [load-yaml-file ->path]]
             [me.raynes
              [conch :refer [with-programs]]
              [fs :as fs]]))
@@ -12,16 +12,19 @@
   (with-programs [git]
     (print (git "clone" url dir))))
 
+(defn fetch-repository [repo-name url into-dir]
+  (let [dir (->path into-dir repo-name)]
+    (println "Fetching" dir)
+    (if (fs/exists? dir)
+      (git-pull dir)
+      (git-clone url dir))))
+
 (defn update-repo-map
-  "Fetches the repositories in `m` with keys specifying directory names and
+  "Fetches the repositories in `m` with keys specifying repository names and
   values representing repository URLs into the directory specified by `base-path`."
   [m base-path]
   (doseq [[repo-name url] m]
-    (let [dir (str base-path "/" (name repo-name))]
-      (println "Fetching" dir)
-      (if (fs/exists? dir)
-        (git-pull dir)
-        (git-clone url dir)))))
+    (fetch-repository (name repo-name) url base-path)))
 
 (defn update-source-lists []
   (println "Updating Sources:")
