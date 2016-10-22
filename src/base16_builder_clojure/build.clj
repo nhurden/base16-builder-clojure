@@ -3,7 +3,11 @@
             [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [clostache.parser :refer [render]]
-            [slugger.core :refer [->slug]]))
+            [slugger.core :refer [->slug]]
+            [clojure.string :as str]))
+
+(defn ->path [& components]
+  (str/join "/" components))
 
 (defn scheme-names []
   (->> (load-yaml-file "sources/schemes/list.yaml")
@@ -16,11 +20,11 @@
        (map name)))
 
 (defn template-configs [name]
-  (-> (str "templates/" name "/templates/config.yaml")
+  (-> (->path "templates" name "templates" "config.yaml")
       load-yaml-file))
 
 (defn scheme-files [name]
-  (->> (str "schemes/" name "/*.yaml")
+  (->> (->path "schemes" name "*.yaml")
        fs/glob
        (map load-yaml-file)))
 
@@ -29,7 +33,7 @@
     (doseq [file files] (io/delete-file file))))
 
 (defn output-path [name config]
-  (str "templates/" name "/" (:output config)))
+  (->path "templates" name (:output config)))
 
 (defn print-header [s]
   (println)
@@ -84,8 +88,8 @@
           extension (:extension config)
           out-filename (str "base16-" slug extension)
           out-path (output-path template-name config)
-          out-target (str out-path "/" out-filename)
-          template-path (str "templates/" template-name "/templates/" (name template-filename) ".mustache")
+          out-target (->path out-path out-filename)
+          template-path (->path "templates" template-name "templates" (str (name template-filename) ".mustache"))
           template (slurp template-path)
           rendered (render template data)
           ]
