@@ -1,5 +1,5 @@
 (ns base16-builder-clojure.update
-  (:require [base16-builder-clojure.io :refer [load-yaml-file ->path]]
+  (:require [base16-builder-clojure.io :refer [load-yaml-file ->path print-header]]
             [me.raynes
              [conch :refer [with-programs]]
              [fs :as fs]]))
@@ -7,12 +7,12 @@
 (defn git-pull [dir]
   (println "Pulling" dir)
   (with-programs [git]
-    (print (git "-C" dir "pull"))))
+    (println (git "-C" dir "pull"))))
 
 (defn git-clone [url dir]
   (println "Cloning" url "into" dir)
   (with-programs [git]
-    (print (git "clone" url dir))))
+    (println (git "clone" url dir))))
 
 (defn fetch-repository [repo-name url into-dir]
   (let [dir (->path into-dir repo-name)]
@@ -28,17 +28,17 @@
     (fetch-repository (name repo-name) url base-path)))
 
 (defn update-source-lists []
-  (println "Updating Sources:")
+  (print-header "Updating Sources:")
   (-> (load-yaml-file "sources.yaml")
       (update-repo-map "sources")))
 
 (defn update-schemes []
-  (println "Updating Schemes:")
+  (print-header "Updating Schemes:")
   (-> (load-yaml-file "sources/schemes/list.yaml")
       (update-repo-map "schemes")))
 
 (defn update-templates []
-  (println "Updating Templates:")
+  (print-header "Updating Templates:")
   (-> (load-yaml-file "sources/templates/list.yaml")
       (update-repo-map "templates")))
 
