@@ -5,16 +5,17 @@
              [fs :as fs]]))
 
 (defn git-pull [dir]
+  (println "Pulling" dir)
   (with-programs [git]
     (print (git "-C" dir "pull"))))
 
 (defn git-clone [url dir]
+  (println "Cloning" url "into" dir)
   (with-programs [git]
     (print (git "clone" url dir))))
 
 (defn fetch-repository [repo-name url into-dir]
   (let [dir (->path into-dir repo-name)]
-    (println "Fetching" dir)
     (if (fs/exists? dir)
       (git-pull dir)
       (git-clone url dir))))
