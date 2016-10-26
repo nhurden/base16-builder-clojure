@@ -38,6 +38,11 @@
 (defn output-path [name config]
   (->path "templates" name (:output config)))
 
+(defn load-partials [partial-names template-name]
+  (defn load-partial [partial-name]
+    [(keyword partial-name) (slurp (->path "templates" template-name "templates" (str partial-name ".mustache")))])
+  (into {} (map load-partial partial-names)))
+
 (defn print-header [s]
   (println)
   (println "---")

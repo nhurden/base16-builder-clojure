@@ -17,8 +17,8 @@
           out-target (->path out-path out-filename)
           template-path (->path "templates" template-name "templates" (str (name template-filename) ".mustache"))
           template (slurp template-path)
-          rendered (render template data)
-          ]
+          partial-map (load-partials (:partials config) template-name)
+          rendered (render template data partial-map)]
       (println "Building" out-filename)
       (when-not (fs/exists? out-path)
         (fs/mkdir out-path))
