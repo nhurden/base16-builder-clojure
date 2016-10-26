@@ -151,7 +151,14 @@
    :base00-hex-b "f8"
    :base00-rgb-r "248"
    :base00-rgb-g "248"
-   :base00-rgb-b "248"})
+   :base00-rgb-b "248"
+   :base00-rgbf-r "0.972549"
+   :base00-rgbf-g "0.972549"
+   :base00-rgbf-b "0.972549"
+    })
+
+(defn submap? [a b]
+  (clojure.set/subset? (set a) (set b)))
 
 (deftest assoc-bases
   (testing "hex-components"
@@ -159,10 +166,10 @@
       (is (= (sut/hex-components "abcdef") ["ab" "cd" "ef"]))))
   (testing "rgb-components"
     (testing "extracts components from a hex string"
-      (is (= (sut/rgb-components "abcdef") ["171" "205" "239"]))))
+      (is (= (sut/rgb-components "abcdef") [171 205 239]))))
   (testing "color-pairs"
     (testing "returns a map for a single color"
       (is (= (sut/color-map scheme-desc :base00) expected-base00))))
   (testing "assoc-bases"
     (testing "adds colors to the base object"
-      (is (= (sut/assoc-bases base scheme-desc) expected)))))
+      (is (submap? expected (sut/assoc-bases base scheme-desc))))))

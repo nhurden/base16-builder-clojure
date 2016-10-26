@@ -12,7 +12,7 @@
 
 (defn rgb-components [color]
   (defn hex->dec [hex]
-    (str (read-string (str "0x" hex))))
+    (read-string (str "0x" hex)))
 
   (map hex->dec (hex-components color)))
 
@@ -21,13 +21,18 @@
         [hex-r hex-g hex-b] (hex-components color)
         [rgb-r rgb-g rgb-b] (rgb-components color)]
     (defn k [suffix] (keyword (str (name key) suffix)))
+    (defn float-color [color]
+      (str (float (/ color 255))))
     {(k "-hex") color
      (k "-hex-r") hex-r
      (k "-hex-g") hex-g
      (k "-hex-b") hex-b
-     (k "-rgb-r") rgb-r
-     (k "-rgb-g") rgb-g
-     (k "-rgb-b") rgb-b}))
+     (k "-rgb-r") (str rgb-r)
+     (k "-rgb-g") (str rgb-g)
+     (k "-rgb-b") (str rgb-b)
+     (k "-rgbf-r") (float-color rgb-r)
+     (k "-rgbf-g") (float-color rgb-g)
+     (k "-rgbf-b") (float-color rgb-b)}))
 
 (defn assoc-bases [m scheme-desc]
   (merge m (apply merge (map #(color-map scheme-desc %) color-keys))))
