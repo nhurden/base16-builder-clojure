@@ -18,7 +18,7 @@ which range from 0-255, this builder provides `base00-rgbf-r`, `base00-rgbf-g`
 and `base00-rgbf-b`, ranging from 0-1.
 
 ### Partials
-For templates that have complex colour formats, partials can help simplify
+For templates that have complex colour formats, partials can help to simplify
 this repetition.
 
 In order to avoid needing to create a partial for each colour, colours can be used
@@ -54,3 +54,4 @@ Inside partials, the following keys are available:
 * `rgbf-b`
 
 Partial files can be placed in the `templates` directory of a template.
+Partial names must be listed under the partials key of the template's `config.yaml` file.
