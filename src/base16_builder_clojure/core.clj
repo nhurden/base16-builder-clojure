@@ -1,10 +1,11 @@
 (ns base16-builder-clojure.core
   (:gen-class)
-  (:require [clojure.string :as string]
-            [clojure.tools.cli :refer [parse-opts]]
-            [base16-builder-clojure.build :refer [build-all build-template]]
-            [base16-builder-clojure.update :refer [update-all fetch-repository]]
-            [base16-builder-clojure.io :refer [scheme-names template-names]]))
+  (:require [base16-builder-clojure
+             [build :refer [build-all build-template]]
+             [io :refer [scheme-names template-names]]
+             [update :refer [fetch-repository update-all]]]
+            [clojure.string :as string]
+            [clojure.tools.cli :refer [parse-opts]]))
 
  (def cli-options
    [[nil "--template-name NAME" "Name of the template repository to build"
