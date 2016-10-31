@@ -1,36 +1,56 @@
 # base16-builder-clojure
 
-FIXME: description
-
-## Installation
-
-Download from http://example.com/FIXME.
+A builder of [base16](https://github.com/chriskempson/base16) templates.
 
 ## Usage
 
-FIXME: explanation
+### Building all templates
+    $ lein run update
+    $ lein run build
 
-    $ java -jar base16-builder-clojure-0.1.0-standalone.jar [args]
+### Building a single template
+    $ lein run build --template-name [NAME] --template-dir [DIRECTORY]
 
-## Options
+## Additional Features
+### Floating Point RGB
+In addition to providing `base00-rgb-r`, `base00-rgb-g` and `base00-rgb-b`,
+which range from 0-255, this builder provides `base00-rgbf-r`, `base00-rgbf-g`
+and `base00-rgbf-b`, ranging from 0-1.
 
-FIXME: listing of options this app accepts.
+### Partials
+For templates that have complex colour formats, partials can help simplify
+this repetition.
 
-## Examples
+In order to avoid needing to create a partial for each colour, colours can be used
+as sections, bringing the correct colour into scope for the partial. For example,
+a `json-rgb` partial:
 
-...
+```mustache
+{
+  "r": {{rgb-r}},
+  "g": {{rgb-g}},
+  "b": {{rgb-b}}
+}
+```
 
-### Bugs
+can be used as follows:
 
-...
+```mustache
+{{#base00}}{{>json-rgb}}{{/base00}}
+```
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+Note that individual colours are not specified in the partial.
 
-## License
+Inside partials, the following keys are available:
+* `hex`
+* `hex-r`
+* `hex-g`
+* `hex-b`
+* `rgb-r`
+* `rgb-g`
+* `rgb-b`
+* `rgbf-r`
+* `rgbf-g`
+* `rgbf-b`
 
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Partial files can be placed in the `templates` directory of a template.
