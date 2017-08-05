@@ -37,9 +37,9 @@
      (k "-rgb-r") (str rgb-r)
      (k "-rgb-g") (str rgb-g)
      (k "-rgb-b") (str rgb-b)
-     (k "-rgbf-r") (float-color rgb-r)
-     (k "-rgbf-g") (float-color rgb-g)
-     (k "-rgbf-b") (float-color rgb-b)
+     (k "-dec-r") (float-color rgb-r)
+     (k "-dec-g") (float-color rgb-g)
+     (k "-dec-b") (float-color rgb-b)
      key {:hex color
           :hex-r hex-r
           :hex-g hex-g
@@ -47,9 +47,9 @@
           :rgb-r (str rgb-r)
           :rgb-g (str rgb-g)
           :rgb-b (str rgb-b)
-          :rgbf-r (float-color rgb-r)
-          :rgbf-g (float-color rgb-g)
-          :rgbf-b (float-color rgb-b)}}))
+          :dec-r (float-color rgb-r)
+          :dec-g (float-color rgb-g)
+          :dec-b (float-color rgb-b)}}))
 
 (defn assoc-bases [m scheme-desc]
   (merge m (apply merge (map #(color-map scheme-desc %) color-keys))))

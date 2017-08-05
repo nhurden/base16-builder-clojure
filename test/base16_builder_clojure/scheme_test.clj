@@ -172,9 +172,9 @@
    :base00-rgb-r "248"
    :base00-rgb-g "248"
    :base00-rgb-b "248"
-   :base00-rgbf-r "0.972549"
-   :base00-rgbf-g "0.972549"
-   :base00-rgbf-b "0.972549"
+   :base00-dec-r "0.972549"
+   :base00-dec-g "0.972549"
+   :base00-dec-b "0.972549"
    :base00 {:hex "f8f8f8"
             :hex-r "f8"
             :hex-g "f8"
@@ -182,9 +182,9 @@
             :rgb-r "248"
             :rgb-g "248"
             :rgb-b "248"
-            :rgbf-r "0.972549"
-            :rgbf-g "0.972549"
-            :rgbf-b "0.972549"}})
+            :dec-r "0.972549"
+            :dec-g "0.972549"
+            :dec-b "0.972549"}})
 
 (defn submap? [a b]
   (clojure.set/subset? (set a) (set b)))
