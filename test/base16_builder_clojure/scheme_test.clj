@@ -216,3 +216,7 @@
     (is (= (sut/remove-leading-hash "abc123") "abc123")))
   (testing "with a leading hash"
     (is (= (sut/remove-leading-hash "#abc123") "abc123"))))
+
+(deftest remove-extension
+  (testing "removing a file extension"
+    (is (= (sut/remove-extension "classic-light.yaml") "classic-light"))))

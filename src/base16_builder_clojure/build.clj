@@ -8,8 +8,10 @@
 (defn build-scheme
   "Build a single template/scheme pair"
   [template-name template-filename config scheme]
-  (doseq [scheme-desc (scheme-files scheme)]
-    (let [data (scheme-data scheme-desc)
+  (doseq [scheme-file (scheme-files scheme)]
+    (let [scheme-desc (load-yaml-file scheme-file)
+          scheme-filename (.getName scheme-file)
+          data (scheme-data scheme-desc scheme-filename)
           slug (:scheme-slug data)
           extension (:extension config)
           out-filename (str "base16-" slug extension)

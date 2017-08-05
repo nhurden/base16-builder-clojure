@@ -7,8 +7,8 @@
 (defn ->path [& components]
   (str/join "/" components))
 
-(defn load-yaml-file [filename]
-  (-> filename
+(defn load-yaml-file [file]
+  (-> file
       slurp
       yaml/parse-string))
 
@@ -28,8 +28,7 @@
 
 (defn scheme-files [name]
   (->> (->path "schemes" name "*.yaml")
-       fs/glob
-       (map load-yaml-file)))
+       fs/glob))
 
 (defn remove-existing-output [path extension]
   (let [files (fs/glob (str path "/base16-*" extension))]

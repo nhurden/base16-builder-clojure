@@ -1,5 +1,6 @@
 (ns base16-builder-clojure.scheme
-  (:require [slugger.core :refer [->slug]]))
+  (:require [slugger.core :refer [->slug]]
+            [clojure.string :as str]))
 
 (def color-keys
   [:base00 :base01 :base02 :base03 :base04 :base05 :base06 :base07
@@ -54,8 +55,14 @@
 (defn assoc-bases [m scheme-desc]
   (merge m (apply merge (map #(color-map scheme-desc %) color-keys))))
 
-(defn scheme-data [scheme-desc]
-  (-> {:scheme-slug (->slug (:scheme scheme-desc))
-       :scheme-name (:scheme scheme-desc)
-       :scheme-author (:author scheme-desc)}
-      (assoc-bases scheme-desc)))
+(defn remove-extension [filename]
+  (-> filename
+      (str/split #"\.")
+      first))
+
+(defn scheme-data [scheme-desc scheme-filename]
+  (let [without-extension (remove-extension scheme-filename)]
+    (-> {:scheme-slug (->slug without-extension)
+         :scheme-name (:scheme scheme-desc)
+         :scheme-author (:author scheme-desc)}
+        (assoc-bases scheme-desc))))
